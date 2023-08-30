@@ -34,7 +34,7 @@ fun EncounterCompanionApp() {
                 .fillMaxSize()
                 .padding(it)
         ) {
-            val monstersViewModel: MonstersViewModel = viewModel()
+            val monstersViewModel: MonstersViewModel = viewModel(factory = MonstersViewModel.Factory)
             HomeScreen(
                 monstersUiState = monstersViewModel.monstersUiState)
         }

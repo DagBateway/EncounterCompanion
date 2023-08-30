@@ -1,26 +1,16 @@
 package com.albertocamillo.encountercompanion.network
 
-import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
+import com.albertocamillo.encountercompanion.data.MonsterDetails
+import com.albertocamillo.encountercompanion.data.MonsterIndexList
+import retrofit2.Call
 import retrofit2.http.GET
-
-
-private const val BASE_URL =
-    "https://www.dnd5eapi.co/api/"
-
-private val retrofit = Retrofit.Builder()
-    .addConverterFactory(ScalarsConverterFactory.create())
-    .baseUrl(BASE_URL)
-    .build()
+import retrofit2.http.Url
 
 interface ApiService {
     @GET("monsters")
-    suspend fun getMonsters(): String
-}
+    suspend fun getMonsterIndexList(): MonsterIndexList
 
-object Api {
-    val retrofitService: ApiService by lazy {
-        retrofit.create(ApiService::class.java)
-    }
+    @GET
+    suspend fun getMonsterDetails(@Url url: String?): MonsterDetails
 }
 
