@@ -1,5 +1,6 @@
 package com.albertocamillo.encountercompanion.data
 
+import kotlinx.coroutines.Deferred
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -21,12 +21,19 @@ import com.albertocamillo.encountercompanion.R
 
 @Composable
 fun HomeScreen(
-    monstersUiState: MonstersUiState, modifier: Modifier = Modifier
+    monstersIndexListUiState: MonstersIndexListUiState,
+    monstersDetailsUiState: MonstersDetailsUiState,
+    modifier: Modifier = Modifier
 ) {
-    when (monstersUiState) {
-        is MonstersUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is MonstersUiState.Success -> ResultScreen(monstersUiState.monsters, modifier = modifier.fillMaxWidth())
-        is MonstersUiState.Error -> ErrorScreen( modifier = modifier.fillMaxSize())
+    when (monstersIndexListUiState) {
+        is MonstersIndexListUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
+        is MonstersIndexListUiState.Success -> ResultScreen(monstersIndexListUiState.monstersIndexListSize, modifier = modifier.fillMaxWidth())
+        is MonstersIndexListUiState.Error -> ErrorScreen( modifier = modifier.fillMaxSize())
+    }
+    when (monstersDetailsUiState) {
+        is MonstersDetailsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
+        is MonstersDetailsUiState.Success -> ResultScreen(monstersDetailsUiState.monstersDetails.name, modifier = modifier.fillMaxWidth())
+        is MonstersDetailsUiState.Error -> ErrorScreen( modifier = modifier.fillMaxSize())
     }
 }
 
@@ -65,7 +72,6 @@ fun ErrorScreen(modifier: Modifier = Modifier) {
         Text(text = stringResource(R.string.loading_failed), modifier = Modifier.padding(16.dp))
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

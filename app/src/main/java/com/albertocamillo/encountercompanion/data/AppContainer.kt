@@ -11,7 +11,7 @@ interface AppContainer {
 }
 
 class DefaultAppContainer : AppContainer {
-    private val baseUrl = "https://www.dnd5eapi.co/api/"
+    private val baseUrl = "https://www.dnd5eapi.co/"
 
     private val retrofit = Retrofit.Builder()
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))

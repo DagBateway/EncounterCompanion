@@ -7,10 +7,10 @@ import retrofit2.http.GET
 import retrofit2.http.Url
 
 interface ApiService {
-    @GET("monsters")
+    @GET("api/monsters")
     suspend fun getMonsterIndexList(): MonsterIndexList
 
     @GET
-    suspend fun getMonsterDetails(@Url url: String?): MonsterDetails
+    suspend fun getMonsterDetails(@Url url: String): MonsterDetails
 }
 

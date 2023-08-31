@@ -13,28 +13,57 @@ import com.albertocamillo.encountercompanion.EncounterCompanionApplication
 import java.io.IOException
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import com.albertocamillo.encountercompanion.data.EncounterCompanionRepository
+import com.albertocamillo.encountercompanion.data.MonsterDetails
+import com.albertocamillo.encountercompanion.data.MonsterIndex
 
-sealed interface MonstersUiState {
-    data class Success(val monsters: String) :  MonstersUiState
-    object Error : MonstersUiState
-    object Loading : MonstersUiState
+sealed interface MonstersIndexListUiState {
+    data class Success(val monstersIndexListSize: String) : MonstersIndexListUiState
+    object Error : MonstersIndexListUiState
+    object Loading : MonstersIndexListUiState
 }
-class MonstersViewModel(private val encounterCompanionRepository: EncounterCompanionRepository): ViewModel() {
-    var monstersUiState: MonstersUiState by mutableStateOf(MonstersUiState.Loading)
+
+sealed interface MonstersDetailsUiState {
+    data class Success(val monstersDetails: MonsterDetails) : MonstersDetailsUiState
+    object Error : MonstersDetailsUiState
+    object Loading : MonstersDetailsUiState
+}
+
+class MonstersViewModel(private val encounterCompanionRepository: EncounterCompanionRepository) :
+    ViewModel() {
+    var monstersIndexListUiState: MonstersIndexListUiState by mutableStateOf(
+        MonstersIndexListUiState.Loading
+    )
         private set
+
+    var monstersDetailsUiState: MonstersDetailsUiState by mutableStateOf(
+        MonstersDetailsUiState.Loading
+    )
+        private set
+
     init {
-        getMonsters()
+        getMonsterIndexList()
     }
 
-    private fun getMonsters() {
+    private fun getMonsterIndexList() {
         viewModelScope.launch {
-            monstersUiState = try{
-                val listResult = encounterCompanionRepository.getMonsterIndexList()
-                MonstersUiState.Success("Success: ${listResult.count} Monsters retrieved")
-            }catch (e: IOException){
-                MonstersUiState.Error
+            try {
+                val monsterIndexList = encounterCompanionRepository.getMonsterIndexList()
+                monstersIndexListUiState = MonstersIndexListUiState.Success("Success: ${monsterIndexList.count} Monsters retrieved")
+            } catch (e: IOException) {
+                MonstersIndexListUiState.Error
             }
 
+        }
+    }
+
+    private fun getMonstersDetails(monsterIndex: MonsterIndex) {
+        viewModelScope.launch {
+            try {
+                val monsterDetails = encounterCompanionRepository.getMonsterDetails(monsterIndex.url)
+                monstersDetailsUiState = MonstersDetailsUiState.Success(monsterDetails)
+            } catch (e: IOException) {
+                MonstersDetailsUiState.Error
+            }
         }
     }
 
@@ -42,7 +71,8 @@ class MonstersViewModel(private val encounterCompanionRepository: EncounterCompa
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as EncounterCompanionApplication)
-                val encounterCompanionRepository = application.container.encounterCompanionRepository
+                val encounterCompanionRepository =
+                    application.container.encounterCompanionRepository
                 MonstersViewModel(encounterCompanionRepository = encounterCompanionRepository)
             }
         }

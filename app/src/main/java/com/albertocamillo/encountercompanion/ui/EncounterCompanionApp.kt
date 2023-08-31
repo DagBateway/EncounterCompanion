@@ -36,7 +36,8 @@ fun EncounterCompanionApp() {
         ) {
             val monstersViewModel: MonstersViewModel = viewModel(factory = MonstersViewModel.Factory)
             HomeScreen(
-                monstersUiState = monstersViewModel.monstersUiState)
+                monstersIndexListUiState = monstersViewModel.monstersIndexListUiState,
+                monstersDetailsUiState = monstersViewModel.monstersDetailsUiState)
         }
     }
 }
