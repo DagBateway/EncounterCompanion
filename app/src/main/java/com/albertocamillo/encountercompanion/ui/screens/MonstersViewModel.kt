@@ -15,9 +15,10 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import com.albertocamillo.encountercompanion.data.EncounterCompanionRepository
 import com.albertocamillo.encountercompanion.data.MonsterDetails
 import com.albertocamillo.encountercompanion.data.MonsterIndex
+import com.albertocamillo.encountercompanion.data.MonsterIndexList
 
 sealed interface MonstersIndexListUiState {
-    data class Success(val monstersIndexListSize: String) : MonstersIndexListUiState
+    data class Success(val monstersIndexList: MonsterIndexList) : MonstersIndexListUiState
     object Error : MonstersIndexListUiState
     object Loading : MonstersIndexListUiState
 }
@@ -48,7 +49,7 @@ class MonstersViewModel(private val encounterCompanionRepository: EncounterCompa
         viewModelScope.launch {
             try {
                 val monsterIndexList = encounterCompanionRepository.getMonsterIndexList()
-                monstersIndexListUiState = MonstersIndexListUiState.Success("Success: ${monsterIndexList.count} Monsters retrieved")
+                monstersIndexListUiState = MonstersIndexListUiState.Success(monsterIndexList)
             } catch (e: IOException) {
                 MonstersIndexListUiState.Error
             }
