@@ -1,10 +1,9 @@
 package com.albertocamillo.encountercompanion.data
 
-import kotlinx.serialization.Serializable
+import com.squareup.moshi.Json
 
-@Serializable
 data class MonsterIndex (
-    val index: String,
-    val name: String,
-    val url: String
+    @field:Json(name = "index") val index: String,
+    @field:Json(name = "name") val name: String,
+    @field:Json(name = "url") val url: String
 )

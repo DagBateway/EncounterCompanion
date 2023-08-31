@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.albertocamillo.encountercompanion"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.albertocamillo.encountercompanion"
@@ -69,6 +69,10 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
     // Kotlin serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    // Navigation
+    implementation("androidx.navigation:navigation-compose:2.7.1")
+    // Moshi
+    implementation("com.squareup.retrofit2:converter-moshi:2.4.0")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")

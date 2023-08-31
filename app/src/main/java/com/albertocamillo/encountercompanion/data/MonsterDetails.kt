@@ -1,10 +1,8 @@
 package com.albertocamillo.encountercompanion.data
 
-import kotlinx.coroutines.Deferred
-import kotlinx.serialization.Serializable
+import com.squareup.moshi.Json
 
-@Serializable
 data class MonsterDetails (
-    val name: String,
-    val image: String
+    @field:Json(name = "name") val name: String,
+    @field:Json(name = "image") val image: String
 )

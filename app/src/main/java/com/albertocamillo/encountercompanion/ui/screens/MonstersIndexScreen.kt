@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.albertocamillo.encountercompanion.ui.screens
 
 import androidx.compose.foundation.Image
@@ -13,7 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,52 +25,45 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.albertocamillo.encountercompanion.ui.theme.EncounterCompanionTheme
 import com.albertocamillo.encountercompanion.R
 import com.albertocamillo.encountercompanion.data.MonsterIndex
 import com.albertocamillo.encountercompanion.data.MonsterIndexList
 
 @Composable
-fun HomeScreen(
-    monstersIndexListUiState: MonstersIndexListUiState,
-    monstersDetailsUiState: MonstersDetailsUiState,
+fun MonstersIndexScreen(
+    monstersIndexListWebRequestUiState: MonstersIndexListWebRequestUiState,
+    onMonsterCardClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    when (monstersIndexListUiState) {
-        is MonstersIndexListUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is MonstersIndexListUiState.Success -> ResultScreen(
-            monstersIndexListUiState.monstersIndexList,
+
+    when (monstersIndexListWebRequestUiState) {
+        is MonstersIndexListWebRequestUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
+        is MonstersIndexListWebRequestUiState.Success -> ResultScreen(
+            monstersIndexListWebRequestUiState.monstersIndexList,
+            onMonsterCardClicked,
             modifier = modifier.fillMaxWidth()
         )
 
-        is MonstersIndexListUiState.Error -> ErrorScreen(modifier = modifier.fillMaxSize())
+        is MonstersIndexListWebRequestUiState.Error -> ErrorScreen(modifier = modifier.fillMaxSize())
     }
-//    when (monstersDetailsUiState) {
-//        is MonstersDetailsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-//        is MonstersDetailsUiState.Success -> ResultScreen(
-//            monstersDetailsUiState.monstersDetails.name,
-//            modifier = modifier.fillMaxWidth()
-//        )
-//
-//        is MonstersDetailsUiState.Error -> ErrorScreen(modifier = modifier.fillMaxSize())
-//    }
 }
+
 
 /**
  * ResultScreen displaying number of monsters retrieved.
  */
 @Composable
-fun ResultScreen(monsterIndexList: MonsterIndexList, modifier: Modifier = Modifier) {
+fun ResultScreen(monsterIndexList: MonsterIndexList, onMonsterCardClicked: (String) -> Unit, modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
     ) {
-        MonsterIndexListColumn(monsterIndexList.results)
+        MonsterIndexListColumn(onMonsterCardClicked, monsterIndexList.results)
     }
 }
 
 @Composable
-fun MonsterIndexCard(monsterName: String, modifier: Modifier = Modifier) {
+fun MonsterIndexCard(onMonsterCardClicked: (String) -> Unit, monsterIndex: MonsterIndex) {
     Card(
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(
@@ -76,23 +71,29 @@ fun MonsterIndexCard(monsterName: String, modifier: Modifier = Modifier) {
         ),
         modifier = Modifier
             .padding(16.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        onClick = {
+            onMonsterCardClicked(monsterIndex.index)
+        },
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            Text(text = monsterName, style = MaterialTheme.typography.bodyLarge)
+            Text(text = monsterIndex.name, style = MaterialTheme.typography.bodyLarge)
         }
     }
 }
 
 @Composable
-fun MonsterIndexListColumn(monsterIndexList: List<MonsterIndex>, modifier: Modifier = Modifier) {
+fun MonsterIndexListColumn(
+    onMonsterCardClicked: (String) -> Unit,
+    monsterIndexList: List<MonsterIndex>
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
         items(monsterIndexList) { monsterIndex ->
-            MonsterIndexCard(monsterName = monsterIndex.name)
+            MonsterIndexCard(onMonsterCardClicked, monsterIndex = monsterIndex)
         }
     }
 }
@@ -124,5 +125,6 @@ fun ErrorScreen(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewMonsterIndexCard() {
-    MonsterIndexCard(monsterName = "Aboleth")
+    val monster = MonsterIndex(name = "Aboleth", index = "aboleth", url = "/api/aboleth")
+    MonsterIndexCard(monsterIndex = monster, onMonsterCardClicked = {})
 }

@@ -1,9 +1,8 @@
 package com.albertocamillo.encountercompanion.data
 
-import kotlinx.serialization.Serializable
+import com.squareup.moshi.Json
 
-@Serializable
 data class MonsterIndexList (
-    val count: Int,
-    val results: List<MonsterIndex>
+    @field:Json(name = "count") val count: Int,
+    @field:Json(name = "results")val results: List<MonsterIndex>
 )
